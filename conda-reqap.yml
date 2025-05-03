@@ -156,7 +156,6 @@ dependencies:
       - ray==2.45.0
       - referencing==0.36.2
       - regex==2024.11.6
-      - reqap==1.0
       - requests==2.32.3
       - rich==14.0.0
       - rich-toolkit==0.14.4
