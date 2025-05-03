@@ -1,0 +1,73 @@
+### Benchmark
+benchmark: 
+    benchmark: "perqa"
+    benchmark_dir: "./data/benchmarks/perqa"
+    result_dir: "./data/results/perqa/rag_sft"
+
+
+answering:
+    answering_mode_options: ["openai", "instruct_model", "causal"] 
+    answering_mode: "causal"
+    # general
+    model: "data/models/llama/Llama-3.2-1B-Instruct"
+    tokenizer_path: "./data/tokenizers/qu-tokenizer-llama-3.2-1B-Instruct"
+    trained_model_path: "./data/models/perqa/rag-llama-3.2-1B-Instruct"
+    instruction: "./prompts/instruction-rag_answering_sft.txt"
+    prompt: "./prompts/prompt-rag_answering.txt"
+    icl_examples: "./prompts/icl-rag_answering.json"
+    max_num_events: 10
+    max_input_length: 4096
+    max_output_length: 50
+    max_length: 5000
+    max_training_instances: 1000
+    training:
+        train: "./data/training_data/perqa/rag/train_data.jsonl"
+        dev: "./data/training_data/perqa/rag/dev_data.jsonl"
+    # training - training params
+    training_params:
+        output_dir: "./data/models/checkpoints/perqa/rag-model-llama-3.2-1B-Instruct"
+        num_train_epochs: 4
+        learning_rate: 0.0001
+        per_device_train_batch_size: 2
+        per_device_eval_batch_size: 4
+        warmup_ratio: 0.05
+        weight_decay: 0.01
+        logging_dir: "./logs"
+        logging_steps: 10
+        eval_strategy: epoch
+        save_strategy: epoch
+        save_total_limit: 1
+        load_best_model_at_end: True
+        lr_scheduler_type: "linear"
+        save_safetensors: False
+    # model - inference
+    sampling_params:
+        num_return_sequences: 1
+        do_sample: False
+        temperature: 0.0
+        max_new_tokens: 100
+
+
+### RETRIEVE
+# splade
+splade:
+    splade_indices_dir: "./data/splade_indices/perqa"
+    splade_model_type_or_path: "./data/models/splade-cocondenser-ensembledistil"
+    splade_tokenizer_type: "./data/models/splade-cocondenser-ensembledistil"
+    splade_max_length: 512
+    splade_index_batch_size: 8
+    splade_threshold: 0.1
+    splade_verbalize_events: True
+crossencoder:
+    # crossencoder - general
+    model_events:
+        crossencoder_tokenizer_path: "./data/tokenizers/perqa/crossencoder-tokenizer-ms-marco-MiniLM-L-2-v2"
+        crossencoder_trained_model_path: "./data/models/perqa/crossencoder_rag-trained_model-ms-marco-MiniLM-L-2-v2"
+        max_length: 512
+        inference_batch_size: 128  # might be different from training time due to different device
+    model_patterns: False
+    retrieval_result_dir: "./data/results/perqa/rag_openai"
+
+    # TRAINING via rag_openai.yml
+    retrieval_pattern:
+        apply: False

@@ -1,0 +1,19 @@
+Your task is to provide up to 5 high-quality aliases for the provided dictionary key in a JSON list.
+Examples:
+
+- Key `start_date` for a social media post
+["post_date", "post_creation_date", "creation_date", "date_of_post"]
+
+- Key `text` for a social media post
+["post", "post_content", "post_text", "content", "post_string"]
+
+- Key `participants` for a restaurant visit
+["people", "people_list", "meeting_participants", "friends", "people_joining"]
+
+Please provide aliases for the following key in JSON:
+`{{key}}`
+
+This key is used in the following context:
+`{{event_str}}`
+
+Please provide only a JSON list, no other text.

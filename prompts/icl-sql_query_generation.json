@@ -1,0 +1,44 @@
+[
+    {
+        "question": "On which day did I listen to music the most?",
+        "sql_query": "SELECT start_date::DATE, COUNT(*) AS num_songs, FROM music_stream WHERE 1 GROUP BY start_date ORDER BY num_songs DESC LIMIT 1;",
+        "answer_columns": [0]
+    },
+    {
+        "question": "how many km run in the time period of watching {tvseries_name}?",
+        "sql_query": "WITH tv_series_period AS( SELECT MIN(start_date::DATE) AS series_start, MAX(end_date::DATE) AS series_end FROM tvseries_stream WHERE LOWER(tvseries_title) = LOWER('{tvseries_name}')) SELECT SUM(distance) AS total_km FROM workout WHERE LOWER(workout_type) = 'run' AND start_date::DATE BETWEEN (SELECT series_start FROM tv_series_period) AND (SELECT series_end FROM tv_series_period);",
+        "variables": ["tvseries_name"],
+        "answer_columns": [0]
+    },
+    {
+        "question": "which artist did I listen to most on New Year eves?",
+        "sql_query": "SELECT artist_name, COUNT(*) AS num_songs FROM(SELECT unnest(from_json(song_artist, '[\"json\"]')) AS artist_name, * FROM music_stream WHERE EXTRACT(MONTH FROM start_date::DATE) = 12 AND EXTRACT(DAY FROM start_date::DATE) = 31) GROUP BY artist_name ORDER BY num_songs DESC LIMIT 1;",
+        "answer_columns": [0]
+    },
+    {
+        "question": "which artist did I listen to most when running?",
+        "sql_query": "WITH runs AS(SELECT * FROM workout WHERE workout_type = 'run'), music_during_workouts AS (SELECT unnest(from_json(song_artist, '[\"json\"]')) AS artist_name, * FROM music_stream m JOIN runs ON (m.start_date || ' ' || m.start_time)::TIMESTAMP BETWEEN (runs.start_date || ' ' || runs.start_time)::TIMESTAMP AND (runs.end_date || ' ' || runs.end_time)::TIMESTAMP) SELECT artist_name, COUNT(*) AS num_songs FROM music_during_workouts GROUP BY artist_name ORDER BY num_songs DESC LIMIT 1;",
+        "answer_columns": [0]
+    },
+    {
+        "question": "the month I listened to {song_name} the most?",
+        "sql_query": "SELECT EXTRACT(YEAR FROM start_date::DATE) AS year, EXTRACT(MONTH FROM start_date::DATE) AS month, COUNT(*) AS num_plays FROM music_stream WHERE song_name = '{song_name}' GROUP BY year, month ORDER BY num_plays DESC LIMIT 1;",
+        "variables": ["song_name"],
+        "answer_columns": [0, 1]
+    },
+    {
+        "question": "how often did I run after 11PM?",
+        "sql_query": "SELECT COUNT(*) AS num_runs FROM workout WHERE workout_type = 'run' AND start_time > '23:00';",
+        "answer_columns": [0]
+    },
+    {
+        "question": "how long was the first swimming workout that I tracked?",
+        "sql_query": "SELECT duration FROM workout WHERE workout_type = 'swimming' ORDER BY start_date::DATE DESC LIMIT 1;",
+        "answer_columns": [0]
+    },
+    {
+        "question": "the number of calendar entries last month",
+        "sql_query": "SELECT COUNT(*) AS num_calendar_entries FROM calendar WHERE start_date::DATE >= date_trunc('month', current_date) - INTERVAL '1 month' AND start_date::DATE < date_trunc('month', current_date);",
+        "answer_columns": [0]
+    }
+]

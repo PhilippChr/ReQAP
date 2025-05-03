@@ -1,0 +1,15 @@
+loguru
+omegaconf
+torch
+numpy
+pandas
+flask
+duckdb
+protobuf
+sentencepiece
+transformers[torch]
+pyyaml-include
+bm25s
+h5py
+openai
+stopit

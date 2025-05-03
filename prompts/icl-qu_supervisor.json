@@ -1,0 +1,1038 @@
+[
+  [
+    {
+      "qu_input": "QU(question=\"On which day did I listen to music the most?\")",
+      "qu_plan": "ARGMAX(l={{ QU(question=\"number of songs I listened per day?\") }}, arg_attr_name=\"num_songs\", val_attr_name=\"start_date\")"
+    },
+    {
+      "qu_input": "QU(question=\"number of songs I listened per day?\")",
+      "qu_plan": "MAP(l={{ QU(question=\"my songs I listened to grouped by day\") }}, fct=len, res_name=\"num_songs\")"
+    },
+    {
+      "qu_input": "QU(question=\"my songs I listened to grouped by day\")",
+      "qu_plan": "GROUP_BY(l={{ QU(question=\"instances I listened to music with date\") }}, attr_names=[\"start_date\"])"
+    },
+    {
+      "qu_input": "QU(question=\"instances I listened to music with date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I listened to music\") }}, attr_names=[\"start_date\"], attr_types=[date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"I listened to music\")",
+      "qu_plan": "RETRIEVE(query=\"I listened to music\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"when did I go to Paris with Jennifer (start and end date)?\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"when did I go to Paris with Jennifer?\") }}, attr_names=[\"start_date\", \"end_date\"], attr_types=[date.fromisoformat, date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"when did I go to Paris with Jennifer?\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"people that I went to Paris with\") }}, filter=lambda attr: any(\"jennifer\" in p.lower() for p in attr[\"participants\"]))"
+    },
+    {
+      "qu_input": "QU(question=\"people that I went to Paris with\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I went to Paris\") }}, attr_names=[\"participants\"], attr_types=[list])"
+    },
+    {
+      "qu_input": "QU(question=\"I went to Paris\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"I went on a trip with destination\") }}, filter=lambda attr: \"paris\" in attr[\"destination\"])"
+    },
+    {
+      "qu_input": "QU(question=\"I went on a trip with destination\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I went on a trip\") }}, attr_names=[\"destination\"], attr_types=[str])"
+    },
+    {
+      "qu_input": "QU(question=\"I went on a trip\")",
+      "qu_plan": "RETRIEVE(query=\"I went on a trip\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"when did I go to New York with Colton (start and end date)?\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"when did I go to New York with Colton?\") }}, attr_names=[\"start_date\", \"end_date\"], attr_types=[date.fromisoformat, date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"when did I go to New York with Colton?\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"people that I went to New York with\") }}, filter=lambda attr: any(\"colton\" in p.lower() for p in attr[\"participants\"]))"
+    },
+    {
+      "qu_input": "QU(question=\"people that I went to New York with\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I went to New York\") }}, attr_names=[\"participants\"], attr_types=[list])"
+    },
+    {
+      "qu_input": "QU(question=\"I went to New York\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"I went on a trip with destination\") }}, filter=lambda attr: \"New York\" in attr[\"destination\"])"
+    },
+    {
+      "qu_input": "QU(question=\"I went on a trip with destination\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I went on a trip\") }}, attr_names=[\"destination\"], attr_types=[str])"
+    },
+    {
+      "qu_input": "QU(question=\"I went on a trip\")",
+      "qu_plan": "RETRIEVE(query=\"I went on a trip\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"how many km run in the time period of watching Mighty Morphin Power Rangers?\")",
+      "qu_plan": "SUM(l={{ QU(question=\"runs in the time period of watching Mighty Morphin Power Rangers with distance\") }}, attr_name=\"distance\")"
+    },
+    {
+      "qu_input": "QU(question=\"runs in the time period of watching Mighty Morphin Power Rangers with distance\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"runs in the time period of watching Mighty Morphin Power Rangers\") }}, attr_names=[\"distance\"], attr_types=[float])"
+    },
+    {
+      "qu_input": "QU(question=\"runs in the time period of watching Mighty Morphin Power Rangers\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"I went running\") }}, filter=lambda attr: attr[\"start_date\"] >= {{ QU(question=\"start date of watching the TV series Mighty Morphin Power Rangers\") }}.result and attr[\"end_date\"] <= {{ QU(question=\"end date of watching the TV series Mighty Morphin Power Rangers\") }}.result)"
+    },
+    {
+      "qu_input": "QU(question=\"I went running\")",
+      "qu_plan": "RETRIEVE(query=\"I went running\")"
+    },
+    {
+      "qu_input": "QU(question=\"start date of watching the TV series Mighty Morphin Power Rangers\")",
+      "qu_plan": "MIN(l={{ QU(question=\"I watched the TV series Mighty Morphin Power Rangers with start and end date\") }}, attr_name=\"start_date\")"
+    },
+    {
+      "qu_input": "QU(question=\"end date of watching the TV series Mighty Morphin Power Rangers\")",
+      "qu_plan": "MAX(l={{ QU(question=\"I watched the TV series Mighty Morphin Power Rangers with start and end date\") }}, attr_name=\"end_date\")"
+    },
+    {
+      "qu_input": "QU(question=\"I watched the TV series Mighty Morphin Power Rangers with start and end date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I watched the TV series Mighty Morphin Power Rangers\") }}, attr_names=[\"start_date\", \"end_date\"], attr_types=[date.fromisoformat, date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"I watched the TV series Mighty Morphin Power Rangers\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"I watched a TV series with TV series name\") }}, filter=lambda attr: attr[\"tv_series_title\"].lower() == \"mighty morphin power rangers\")"
+    },
+    {
+      "qu_input": "QU(question=\"I watched a TV series with TV series name\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I watched a TV series\") }}, attr_names=[\"tv_series_title\"], attr_types=[str])"
+    },
+    {
+      "qu_input": "QU(question=\"I watched a TV series\")",
+      "qu_plan": "RETRIEVE(query=\"I watched a TV series\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"with whom did I meet most?\")",
+      "qu_plan": "ARGMAX(l={{ QU(question=\"number of meetings grouped by person\") }}, arg_attr_name=\"count\", val_attr_name=\"meeting_person_name\")"
+    },
+    {
+      "qu_input": "QU(question=\"number of meetings grouped by person\")",
+      "qu_plan": "MAP(l={{ QU(question=\"meetings grouped by person\") }}, fct=len, res_name=\"count\")"
+    },
+    {
+      "qu_input": "QU(question=\"meetings grouped by person\")",
+      "qu_plan": "GROUP_BY(l={{ QU(question=\"meetings with person name\") }}, attr_names=[\"meeting_person_name\"])"
+    },
+    {
+      "qu_input": "QU(question=\"meetings with person name\")",
+      "qu_plan": "UNNEST(l={{ QU(question=\"meetings with person names\") }}, nested_attr_name=\"meeting_person_names\", unnested_attr_name=\"meeting_person_name\")"
+    },
+    {
+      "qu_input": "QU(question=\"meetings with person names\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I met with someone\") }}, attr_names=[\"meeting_person_names\"], attr_types=[list])"
+    },
+    {
+      "qu_input": "QU(question=\"I met with someone\")",
+      "qu_plan": "RETRIEVE(query=\"I met with someone\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"with whom did I meet most last year?\")",
+      "qu_plan": "ARGMAX(l={{ QU(question=\"number of meetings last year grouped by person\") }}, arg_attr_name=\"count\", val_attr_name=\"person_name\")"
+    },
+    {
+      "qu_input": "QU(question=\"number of meetings last year grouped by person\")",
+      "qu_plan": "MAP(l={{ QU(question=\"meetings last year grouped by person\") }}, fct=len, res_name=\"count\")"
+    },
+    {
+      "qu_input": "QU(question=\"meetings last year grouped by person\")",
+      "qu_plan": "GROUP_BY(l={{ QU(question=\"meetings last year with individual person\") }}, attr_names=[\"person_name\"])"
+    },
+    {
+      "qu_input": "QU(question=\"meetings last year with individual person\")",
+      "qu_plan": "UNNEST(l={{ QU(question=\"I met with people last year with person names\") }}, nested_attr_name=\"person_names\", unnested_attr_name=\"person_name\")"
+    },
+    {
+      "qu_input": "QU(question=\"I met with people last year with person names\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I met with someone last year\") }}, attr_names=[\"person_names\"], attr_types=[list])"
+    },
+    {
+      "qu_input": "QU(question=\"I met with someone last year\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"I met with someone with date\") }}, filter=lambda attr: attr[\"date\"].year == (date.today().year - 1))"
+    },
+    {
+      "qu_input": "QU(question=\"I met with someone with date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I met with someone\") }}, attr_names=[\"date\"], attr_types=[date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"I met with someone\")",
+      "qu_plan": "RETRIEVE(query=\"I met with someone\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"which artist did I listen to most on New Year eves?\")",
+      "qu_plan": "ARGMAX(l={{ QU(question=\"number of songs grouped by artist on New Year eves\") }}, arg_attr_name=\"count\", val_attr_name=\"artist\")"
+    },
+    {
+      "qu_input": "QU(question=\"number of songs grouped by artist on New Year eves\")",
+      "qu_plan": "MAP(l={{ QU(question=\"songs grouped by artist on New Year eves\") }}, fct=len, res_name=\"count\")"
+    },
+    {
+      "qu_input": "QU(question=\"songs grouped by artist on New Year eves\")",
+      "qu_plan": "GROUP_BY(l={{ QU(question=\"songs listened to on New Year eves with artist\") }}, attr_names=[\"artist\"])"
+    },
+    {
+      "qu_input": "QU(question=\"songs listened to on New Year eves with artist\")",
+      "qu_plan": "UNNEST(l={{ QU(question=\"songs listened to on New Year eves with artist names\") }}, nested_attr_name=\"artist_name\", unnested_attr_name=\"artist\")"
+    },
+    {
+      "qu_input": "QU(question=\"songs listened to on New Year eves with artist names\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"songs listened to on New Year eves\") }}, attr_names=[\"artist_name\"], attr_types=[list])"
+    },
+    {
+      "qu_input": "QU(question=\"songs listened to on New Year eves\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"songs I listened to with date\") }}, filter=lambda attr: attr[\"date\"].month == 12 and attr[\"date\"].day == 31)"
+    },
+    {
+      "qu_input": "QU(question=\"songs I listened to with date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"songs I listened to\") }}, attr_names=[\"date\"], attr_types=[date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"songs I listened to\")",
+      "qu_plan": "RETRIEVE(query=\"songs I listened to\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"which artist did I listen to most when running?\")",
+      "qu_plan": "ARGMAX(l={{ QU(question=\"number of songs grouped by artist while running\") }}, arg_attr_name=\"count\", val_attr_name=\"artist\")"
+    },
+    {
+      "qu_input": "QU(question=\"number of songs grouped by artist while running\")",
+      "qu_plan": "MAP(l={{ QU(question=\"songs grouped by artist while running\") }}, fct=len, res_name=\"count\")"
+    },
+    {
+      "qu_input": "QU(question=\"songs grouped by artist while running\")",
+      "qu_plan": "GROUP_BY(l={{ QU(question=\"songs listened to while running with artist\") }}, attr_names=[\"artist\"])"
+    },
+    {
+      "qu_input": "QU(question=\"songs listened to while running with artist\")",
+      "qu_plan": "UNNEST(l={{ QU(question=\"songs listened to while running with artist names\") }}, nested_attr_name=\"artist_names\", unnested_attr_name=\"artist\")"
+    },
+    {
+      "qu_input": "QU(question=\"songs listened to while running with artist names\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"songs listened to while running\") }}, attr_names=[\"artist_names\"], attr_types=[list])"
+    },
+    {
+      "qu_input": "QU(question=\"songs listened to while running\")",
+      "qu_plan": "JOIN(l1={{ QU(question=\"songs I listened to with start and end datetime\") }}, l2={{ QU(question=\"I went running with start and end datetime\") }}, condition=\"i1.start_datetime >= i2.start_datetime and i1.end_datetime <= i2.end_datetime\")"
+    },
+    {
+      "qu_input": "QU(question=\"songs I listened to with start and end datetime\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"songs I listened to\") }}, attr_names=[\"start_datetime\", \"end_datetime\"], attr_types=[datetime.fromtimestamp, datetime.fromtimestamp])"
+    },
+    {
+      "qu_input": "QU(question=\"songs I listened to\")",
+      "qu_plan": "RETRIEVE(query=\"I listened to a song\")"
+    },
+    {
+      "qu_input": "QU(question=\"I went running with start and end datetime\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I went running\") }}, attr_names=[\"start_datetime\", \"end_datetime\"], attr_types=[datetime.fromtimestamp, datetime.fromtimestamp])"
+    },
+    {
+      "qu_input": "QU(question=\"I went running\")",
+      "qu_plan": "RETRIEVE(query=\"I went running\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"the month I listened to Bohemian Rhapsody the most?\")",
+      "qu_plan": "ARGMAX(l={{ QU(question=\"number of times I listened to Bohemian Rhapsody grouped by month\") }}, arg_attr_name=\"count\", val_attr_name=\"month\")"
+    },
+    {
+      "qu_input": "QU(question=\"number of times I listened to Bohemian Rhapsody grouped by month\")",
+      "qu_plan": "MAP(l={{ QU(question=\"I listened to Bohemian Rhapsody grouped by month\") }}, fct=len, res_name=\"count\")"
+    },
+    {
+      "qu_input": "QU(question=\"I listened to Bohemian Rhapsody grouped by month\")",
+      "qu_plan": "GROUP_BY(l={{ QU(question=\"I listened to Bohemian Rhapsody with month\") }}, attr_names=[\"month\"])"
+    },
+    {
+      "qu_input": "QU(question=\"I listened to Bohemian Rhapsody with month\")",
+      "qu_plan": "MAP(l={{ QU(question=\"I listened to Bohemian Rhapsody with date\") }}, fct=lambda d: (d[\"start_date\"].month, d[\"start_date\"].year), res_name=\"month\")"
+    },
+    {
+      "qu_input": "QU(question=\"I listened to Bohemian Rhapsody with date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I listened to Bohemian Rhapsody\") }}, attr_names=[\"start_date\"], attr_types=[date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"I listened to Bohemian Rhapsody\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"I listened to a song with song name\") }}, filter=lambda attr: attr[\"song_name\"] == \"Bohemian Rhapsody\")"
+    },
+    {
+      "qu_input": "QU(question=\"I listened to a song with song name\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I listened to a song\") }}, attr_names=[\"song_name\"], attr_types=[str])"
+    },
+    {
+      "qu_input": "QU(question=\"I listened to a song\")",
+      "qu_plan": "RETRIEVE(query=\"I listened to a song\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"How many times did I eat Italian food after kite surfing?\")",
+      "qu_plan": "APPLY(l={{ QU(question=\"I ate Italian food after kite surfing\") }}, fct=len)"
+    },
+    {
+      "qu_input": "QU(question=\"I ate Italian food after kite surfing\")",
+      "qu_plan": "JOIN(l1={{ QU(question=\"I ate Italian food with start date and time\") }}, l2={{ QU(question=\"kite surfing events with end date and time\") }}, condition=\"i1.start_date == i2.end_date and i1.start_time >= i2.end_time\")"
+    },
+    {
+      "qu_input": "QU(question=\"I ate Italian food with start date and time\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I ate Italian food\") }}, attr_names=[\"start_date\", \"start_time\"], attr_types=[date.fromisoformat, time.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"I ate Italian food\")",
+      "qu_plan": "RETRIEVE(query=\"I ate Italian food\")"
+    },
+    {
+      "qu_input": "QU(question=\"kite surfing events with end date and time\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"kite surfing events\") }}, attr_names=[\"end_date\", \"end_time\"], attr_types=[date.fromisoformat, time.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"kite surfing events\")",
+      "qu_plan": "RETRIEVE(query=\"I went kite surfing\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"how often did I run after 11PM?\")",
+      "qu_plan": "APPLY(l={{ QU(question=\"instances of running after 11PM\") }}, fct=len)"
+    },
+    {
+      "qu_input": "QU(question=\"instances of running after 11PM\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"I went running with start time\") }}, filter=lambda attr: attr[\"start_time\"] >= time(23, 0))"
+    },
+    {
+      "qu_input": "QU(question=\"I went running with start time\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I went running\") }}, attr_names=[\"start_time\"], attr_types=[time.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"I went running\")",
+      "qu_plan": "RETRIEVE(query=\"I went running\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"first football training after I started as journalist -- when was it?\")",
+      "qu_plan": "MIN(l={{ QU(question=\"football training sessions after I started as journalist\") }}, attr_name=\"start_datetime\")"
+    },
+    {
+      "qu_input": "QU(question=\"football training sessions after I started as journalist\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"my football training sessions with datetime\") }}, filter=lambda attr: attr[\"start_datetime\"] >= {{ QU(question=\"first start datetime as journalist\") }}.result)"
+    },
+    {
+      "qu_input": "QU(question=\"my football training sessions with datetime\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"my football training sessions\") }}, attr_names=[\"start_datetime\"], attr_types=[datetime.fromtimestamp])"
+    },
+    {
+      "qu_input": "QU(question=\"my football training sessions\")",
+      "qu_plan": "RETRIEVE(query=\"I played football\")"
+    },
+    {
+      "qu_input": "QU(question=\"first start datetime as journalist\")",
+      "qu_plan": "MIN(l={{ QU(question=\"start datetime as journalist\") }}, attr_name=\"start_datetime\")"
+    },
+    {
+      "qu_input": "QU(question=\"start datetime as journalist\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I started as journalist\") }}, attr_names=[\"start_datetime\"], attr_types=[datetime.fromtimestamp])"
+    },
+    {
+      "qu_input": "QU(question=\"I started as journalist\")",
+      "qu_plan": "RETRIEVE(query=\"I started as journalist\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"how long was the first swimming workout that I tracked?\")",
+      "qu_plan": "ARGMIN(l={{ QU(question=\"my swimming workouts with duration and start datetime\") }}, arg_attr_name=\"start_datetime\", val_attr_name=\"duration\")"
+    },
+    {
+      "qu_input": "QU(question=\"my swimming workouts with duration and start datetime\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"my swimming workouts\") }}, attr_names=[\"duration\", \"start_datetime\"], attr_types=[str, datetime.fromtimestamp])"
+    },
+    {
+      "qu_input": "QU(question=\"my swimming workouts\")",
+      "qu_plan": "RETRIEVE(query=\"I went swimming\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"my longest trip?\")",
+      "qu_plan": "ARGMAX(l={{ QU(question=\"my trips with duration\") }}, arg_attr_name=\"trip_duration\", val_attr_name=\"trip_destination\")"
+    },
+    {
+      "qu_input": "QU(question=\"my trips with duration\")",
+      "qu_plan": "MAP(l={{ QU(question=\"I went on a trip with destination, start and end date\") }}, fct=lambda attr: (attr[\"end_date\"] - attr[\"start_date\"]).days + 1, res_name=\"trip_duration\")"
+    },
+    {
+      "qu_input": "QU(question=\"I went on a trip with destination, start and end date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I went on a trip\") }}, attr_names=[\"trip_destination\", \"start_date\", \"end_date\"], attr_types=[str, date.fromisoformat, date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"I went on a trip\")",
+      "qu_plan": "RETRIEVE(query=\"I went on a trip\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"when did I last send Zhang a mail after a joint meeting?\")",
+      "qu_plan": "MAX(l={{ QU(question=\"mails to Zhang after a joint meeting\") }}, attr_name=\"start_datetime\")"
+    },
+    {
+      "qu_input": "QU(question=\"mails to Zhang after a joint meeting\")",
+      "qu_plan": "JOIN(l1={{ QU(question=\"mails I sent to Zhang with datetime, date and time\") }}, l2={{ QU(question=\"joint meetings with Zhang with end date and time\") }}, condition=\"i1.start_date == i2.start_date and i1.start_time >= i2.end_time\")"
+    },
+    {
+      "qu_input": "QU(question=\"mails I sent to Zhang with datetime, date and time\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"mails I sent to Zhang\") }}, attr_names=[\"start_datetime\", \"start_date\", \"start_time\"], attr_types=[datetime.fromtimestamp, date.fromisoformat, time.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"mails I sent to Zhang\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"I sent a mail with recipient\") }}, filter=lambda attr: \"zhang\" in attr[\"recipient\"])"
+    },
+    {
+      "qu_input": "QU(question=\"I sent a mail with recipient\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I sent a mail\") }}, attr_names=[\"recipient\"], attr_types=[str])"
+    },
+    {
+      "qu_input": "QU(question=\"I sent a mail\")",
+      "qu_plan": "RETRIEVE(query=\"I sent a mail\")"
+    },
+    {
+      "qu_input": "QU(question=\"joint meetings with Zhang with end date and time\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"joint meetings with Zhang\") }}, attr_names=[\"end_date\", \"end_time\"], attr_types=[date.fromisoformat, time.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"joint meetings with Zhang\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"meetings with individual person\") }}, filter=lambda attr: \"zhang\" in attr[\"person_name\"].lower())"
+    },
+    {
+      "qu_input": "QU(question=\"meetings with individual person\")",
+      "qu_plan": "UNNEST(l={{ QU(question=\"I met with people with participants\") }}, nested_attr_name=\"participants\", unnested_attr_name=\"person_name\")"
+    },
+    {
+      "qu_input": "QU(question=\"I met with people with participants\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I met with people\") }}, attr_names=[\"participants\"], attr_types=[list])"
+    },
+    {
+      "qu_input": "QU(question=\"I met with people\")",
+      "qu_plan": "RETRIEVE(query=\"I met with people\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"the number of calendar entries last month\")",
+      "qu_plan": "APPLY(l={{ QU(question=\"my calendar entries last month\") }}, fct=len)"
+    },
+    {
+      "qu_input": "QU(question=\"my calendar entries last month\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"my calendar entries last month with first day last month\") }}, filter=lambda attr: any((d.year, d.month) == (attr[\"last_day_last_month\"].year, attr[\"last_day_last_month\"].month) for d in [attr[\"start_date\"], attr[\"end_date\"]]))"
+    },
+    {
+      "qu_input": "QU(question=\"my calendar entries last month with first day last month\")",
+      "qu_plan": "MAP(l={{ QU(question=\"my calendar entries with start date\") }}, fct=lambda attr: date.today().replace(day=1) - timedelta(days=1), res_name=\"last_day_last_month\")"
+    },
+    {
+      "qu_input": "QU(question=\"my calendar entries with start date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"my calendar entries\") }}, attr_names=[\"start_date\"], attr_types=[date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"my calendar entries\")",
+      "qu_plan": "RETRIEVE(query=\"my calendar entries\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"how many calendar entries in the first week of my new job?\")",
+      "qu_plan": "APPLY(l={{ QU(question=\"my calendar entries in the first week of my new job\") }}, fct=len)"
+    },
+    {
+      "qu_input": "QU(question=\"my calendar entries in the first week of my new job\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"my calendar entries with start and end date\") }}, filter=lambda attr: any((d.isocalendar()[1], d.year) == {{ QU(question=\"start week of my latest job\") }}.result[0] for d in [attr[\"start_date\"], attr[\"end_date\"]]))"
+    },
+    {
+      "qu_input": "QU(question=\"start week of my latest job\")",
+      "qu_plan": "MAP(l={{ QU(question=\"start date of my latest job\") }}, fct=lambda attr: (attr[\"start_date\"].isocalendar()[1], attr[\"start_date\"].year), res_name=\"start_week\")"
+    },
+    {
+      "qu_input": "QU(question=\"start date of my latest job\")",
+      "qu_plan": "MAX(l={{ QU(question=\"I started a new job with start date\") }}, attr_name=\"start_date\")"
+    },
+    {
+      "qu_input": "QU(question=\"I started a new job with start date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I started a new job\") }}, attr_names=[\"start_date\"], attr_types=[date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"I started a new job\")",
+      "qu_plan": "RETRIEVE(query=\"I started a new job\")"
+    },
+    {
+      "qu_input": "QU(question=\"my calendar entries with start and end date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"my calendar entries\") }}, attr_names=[\"start_date\", \"end_date\"], attr_types=[date.fromisoformat, date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"my calendar entries\")",
+      "qu_plan": "RETRIEVE(query=\"my calendar entries\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"where did I celebrate my 19th birthday?\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"events on my 19th birthday\") }}, attr_names=[\"location\"], attr_types=[str])"
+    },
+    {
+      "qu_input": "QU(question=\"events on my 19th birthday\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"all my events\") }}, filter=lambda attr: attr[\"start_date\"] == {{ QU(question=\"date of my 19th birthday\") }}.result[0])"
+    },
+    {
+      "qu_input": "QU(question=\"date of my 19th birthday\")",
+      "qu_plan": "MAP(l={{ QU(question=\"my date of birth\") }}, fct=lambda attr: attr[\"my_birth_date\"].replace(year=attr[\"my_birth_date\"].year + 19))"
+    },
+    {
+      "qu_input": "QU(question=\"my date of birth\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I mentioned my birth date\") }}, attr_names=[\"my_birth_date\"], attr_types=[date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"I mentioned my birth date\")",
+      "qu_plan": "RETRIEVE(query=\"I mentioned my birth date\")"
+    },
+    {
+      "qu_input": "QU(question=\"all my events\")",
+      "qu_plan": "RETRIEVE(query=\"all my events\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"how often did we celebrate Julia's birthday at Pizza Napoli?\")",
+      "qu_plan": "APPLY(l={{ QU(question=\"instances of Julia's birthday celebrations at Pizza Napoli\") }}, fct=len)"
+    },
+    {
+      "qu_input": "QU(question=\"instances of Julia's birthday celebrations at Pizza Napoli\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"Julia's birthday celebrations with restaurant\") }}, filter=lambda attr: \"pizza napoli\" in attr[\"restaurant_name\"].lower())"
+    },
+    {
+      "qu_input": "QU(question=\"Julia's birthday celebrations with restaurant\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"Julia's birthday celebrations\") }}, attr_names=[\"restaurant_name\"], attr_types=[str])"
+    },
+    {
+      "qu_input": "QU(question=\"Julia's birthday celebrations\")",
+      "qu_plan": "RETRIEVE(query=\"Julia's birthday celebrations\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"How often do I run on Mondays vs Tuesdays?\")",
+      "qu_plan": "MAP(l={{ QU(question=\"my runs on Mondays and Tuesdays, grouped by day\") }}, fct=len, res_name=\"number_of_runs\")"
+    },
+    {
+      "qu_input": "QU(question=\"my runs on Mondays and Tuesdays, grouped by day\")",
+      "qu_plan": "GROUP_BY(l={{ QU(question=\"my runs on Mondays and Tuesdays\") }}, attr_names=[\"weekday\"])"
+    },
+    {
+      "qu_input": "QU(question=\"my runs on Mondays and Tuesdays\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"all my runs with weekday\") }}, filter=lambda attr: attr[\"weekday\"] in [0, 1])"
+    },
+    {
+      "qu_input": "QU(question=\"all my runs with weekday\")",
+      "qu_plan": "MAP(l={{ QU(question=\"all my runs with start date\") }}, fct=lambda item: item[\"start_date\"].weekday(), res_name=\"weekday\")"
+    },
+    {
+      "qu_input": "QU(question=\"all my runs with start date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"all my runs\") }}, attr_names=[\"start_date\"], attr_types=[date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"all my runs\")",
+      "qu_plan": "RETRIEVE(query=\"I went running\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"how much time have I spent with Friends?\")",
+      "qu_plan": "SUM(l={{ QU(question=\"I watched the TV series Friends with duration\") }}, attr_name=\"duration\")"
+    },
+    {
+      "qu_input": "QU(question=\"I watched the TV series Friends with duration\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I watched the TV series Friends\") }}, attr_names=[\"duration\"], attr_types=[float])"
+    },
+    {
+      "qu_input": "QU(question=\"I watched the TV series Friends\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"I watched a TV series with TV series name\") }}, filter=lambda attr: attr[\"tv_series_title\"].lower().startswith(\"friends\"))"
+    },
+    {
+      "qu_input": "QU(question=\"I watched a TV series with TV series name\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I watched a TV series\") }}, attr_names=[\"tv_series_title\"], attr_types=[str])"
+    },
+    {
+      "qu_input": "QU(question=\"I watched a TV series\")",
+      "qu_plan": "RETRIEVE(query=\"I watched a TV series\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"what's the name of the most recent Breaking Bad episode I watched?\")",
+      "qu_plan": "ARGMAX(l={{ QU(question=\"episodes of Breaking Bad I watched with start datetime\") }}, arg_attr_name=\"start_datetime\", val_attr_name=\"episode_name\")"
+    },
+    {
+      "qu_input": "QU(question=\"episodes of Breaking Bad I watched with start datetime\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"instances that I watched the TV series Breaking Bad\") }}, attr_names=[\"episode_name\", \"start_datetime\"], attr_types=[str, datetime.fromtimestamp])"
+    },
+    {
+      "qu_input": "QU(question=\"instances that I watched the TV series Breaking Bad\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"I watched a TV series with TV series title\") }}, filter=lambda attr: attr[\"tv_series_title\"].lower().strip() == (\"breaking bad\"))"
+    },
+    {
+      "qu_input": "QU(question=\"I watched a TV series with TV series title\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I was watching a TV series\") }}, attr_names=[\"tv_series_title\"], attr_types=[str])"
+    },
+    {
+      "qu_input": "QU(question=\"I was watching a TV series\")",
+      "qu_plan": "RETRIEVE(query=\"I was watching a TV series\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"how much money did I spend online the last three years?\")",
+      "qu_plan": "SUM(l={{ QU(question=\"my online purchases in the last three years with amounts\") }}, attr_name=\"amount_spent\")"
+    },
+    {
+      "qu_input": "QU(question=\"my online purchases in the last three years with amounts\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"my online purchases in the last three years\") }}, attr_names=[\"amount_spent\"], attr_types=[float])"
+    },
+    {
+      "qu_input": "QU(question=\"my online purchases in the last three years\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"my online purchases with date\") }}, filter=lambda attr: attr[\"purchase_date\"] >= (date.today() - relativedelta(years=3)))"
+    },
+    {
+      "qu_input": "QU(question=\"my online purchases with date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"my online purchases\") }}, attr_names=[\"purchase_date\"], attr_types=[date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"my online purchases\")",
+      "qu_plan": "RETRIEVE(query=\"my online purchases\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"how often did I meet with both my parents in the evening?\")",
+      "qu_plan": "APPLY(l={{ QU(question=\"I met with both my parents in the evening\") }}, fct=len)"
+    },
+    {
+      "qu_input": "QU(question=\"I met with both my parents in the evening\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"instances I met with both my parents\") }}, filter=lambda attr: attr[\"start_time\"].hour >= 18 and attr[\"start_time\"].hour < 24)"
+    },
+    {
+      "qu_input": "QU(question=\"instances I met with both my parents\")",
+      "qu_plan": "JOIN(l1={{ QU(question=\"instances I met with my mum\") }}, l2={{ QU(question=\"instances I met with my dad\") }}, condition=\"i1.start_datetime <= i2.end_datetime and i2.start_datetime <= i1.end_datetime\")"
+    },
+    {
+      "qu_input": "QU(question=\"instances I met with my mum\")",
+      "qu_plan": "RETRIEVE(query=\"I met with my mum\")"
+    },
+    {
+      "qu_input": "QU(question=\"instances I met with my dad\")",
+      "qu_plan": "RETRIEVE(query=\"I met with my dad\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"what's my maximum heart rate observed when biking?\")",
+      "qu_plan": "MAX(l={{ QU(question=\"my bike workouts with maximum heart rates\") }}, attr_name=\"maximum_heart_rate\")"
+    },
+    {
+      "qu_input": "QU(question=\"my bike workouts with maximum heart rates\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"my bike workouts\") }}, attr_names=[\"maximum_heart_rate\"], attr_types=[int])"
+    },
+    {
+      "qu_input": "QU(question=\"my bike workouts\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"my workouts with workout type\") }}, filter=lambda attr: \"bike\" in attr[\"workout_type\"] or \"bike\" in attr[\"workout_type\"])"
+    },
+    {
+      "qu_input": "QU(question=\"my workouts with workout type\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"my workouts\") }}, attr_names=[\"workout_type\"], attr_types=[str])"
+    },
+    {
+      "qu_input": "QU(question=\"my workouts\")",
+      "qu_plan": "RETRIEVE(query=\"I did a workout\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"what's my avg. heart rate when swimming?\")",
+      "qu_plan": "AVG(l={{ QU(question=\"my swimming sessions with average heart rate\") }}, attr_name=\"avg_heart_rate\")"
+    },
+    {
+      "qu_input": "QU(question=\"my swimming sessions with average heart rate\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"my swimming sessions\") }}, attr_names=[\"avg_heart_rate\"], attr_types=[float])"
+    },
+    {
+      "qu_input": "QU(question=\"my swimming sessions\")",
+      "qu_plan": "RETRIEVE(query=\"I went swimming\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"Total time of listening to music in 2020?\")",
+      "qu_plan": "SUM(l={{ QU(question=\"instances of listening to music in 2020 with durations\") }}, attr_name=\"duration\")"
+    },
+    {
+      "qu_input": "QU(question=\"instances of listening to music in 2020 with durations\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"instances of listening to music in 2020\") }}, attr_names=[\"duration\"], attr_types=[int])"
+    },
+    {
+      "qu_input": "QU(question=\"instances of listening to music in 2020\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"I listened to music with start date\") }}, filter=lambda attr: attr[\"start_date\"].year == 2020)"
+    },
+    {
+      "qu_input": "QU(question=\"I listened to music with start date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I listened to music\") }}, attr_names=[\"start_date\"], attr_types=[date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"I listened to music\")",
+      "qu_plan": "RETRIEVE(query=\"I listened to music\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"The 5 artists I listened most to last month\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"the top-5 grouped artists I listened most to last month\") }}, attr_names=[\"artist\"], attr_types=[\"str\"])"
+    },
+    {
+      "qu_input": "QU(question=\"the top-5 grouped artists I listened most to last month\")",
+      "qu_plan": "APPLY(l={{ QU(question=\"number of songs grouped by artist last month\") }}, fct=lambda x: sorted(x, key=lambda y: y[\"count\"], reverse=True)[:5])"
+    },
+    {
+      "qu_input": "QU(question=\"number of songs grouped by artist last month\")",
+      "qu_plan": "MAP(l={{ QU(question=\"songs grouped by artist last month\") }}, fct=len, res_name=\"count\")"
+    },
+    {
+      "qu_input": "QU(question=\"songs grouped by artist last month\")",
+      "qu_plan": "GROUP_BY(l={{ QU(question=\"songs listened to last month with artist\") }}, attr_names=[\"artist\"])"
+    },
+    {
+      "qu_input": "QU(question=\"songs listened to last month with artist\")",
+      "qu_plan": "UNNEST(l={{ QU(question=\"songs listened to last month with artist names\") }}, nested_attr_name=\"artist_names\", unnested_attr_name=\"artist\")"
+    },
+    {
+      "qu_input": "QU(question=\"songs listened to last month with artist names\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"songs listened to last month\") }}, attr_names=[\"artist_names\"], attr_types=[list])"
+    },
+    {
+      "qu_input": "QU(question=\"songs listened to last month\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"I listened to a song with date and song name\") }}, filter=lambda attr: attr[\"start_date\"].month == (date.today() - relativedelta(months=1)).month and attr[\"start_date\"].year == (date.today() - relativedelta(months=1)).year)"
+    },
+    {
+      "qu_input": "QU(question=\"I listened to a song with date and song name\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I listened to a song\") }}, attr_names=[\"start_date\", \"song_name\"], attr_types=[date.fromisoformat, str])"
+    },
+    {
+      "qu_input": "QU(question=\"I listened to a song\")",
+      "qu_plan": "RETRIEVE(query=\"I listened to a song\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"which cuisine do Laura and I prefer?\")",
+      "qu_plan": "ARGMAX(l={{ QU(question=\"cuisine preferences of Laura and me with counts\") }}, arg_attr_name=\"count\", val_attr_name=\"cuisine_name\")"
+    },
+    {
+      "qu_input": "QU(question=\"cuisine preferences of Laura and me with counts\")",
+      "qu_plan": "MAP(l={{ QU(question=\"cuisine preferences of Laura and me grouped by cuisine\") }}, fct=len, res_name=\"count\")"
+    },
+    {
+      "qu_input": "QU(question=\"cuisine preferences of Laura and me grouped by cuisine\")",
+      "qu_plan": "GROUP_BY(l={{ QU(question=\"I ate something with Laura with cuisine\") }}, attr_names=[\"cuisine_name\"])"
+    },
+    {
+      "qu_input": "QU(question=\"I ate something with Laura with cuisine\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"I ate something with cuisine and people\") }}, filter=lambda attr: any(\"laura\" in p.lower() for p in attr[\"participants\"]))"
+    },
+    {
+      "qu_input": "QU(question=\"I ate something with cuisine and people\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I ate something\") }}, attr_names=[\"cuisine_name\", \"participants\"], attr_types=[str, list])"
+    },
+    {
+      "qu_input": "QU(question=\"I ate something\")",
+      "qu_plan": "RETRIEVE(query=\"I ate something\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"How many running kilometres since I joined Triton College\")",
+      "qu_plan": "SUM(l={{ QU(question=\"running kilometres since I joined Triton College\") }}, attr_name=\"distance\")"
+    },
+    {
+      "qu_input": "QU(question=\"running kilometres since I joined Triton College\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"runs since I joined Triton College\") }}, attr_names=[\"distance\"], attr_types=[float])"
+    },
+    {
+      "qu_input": "QU(question=\"runs since I joined Triton College\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"I went running with date\") }}, filter=lambda attr: attr[\"start_date\"] >= {{ QU(question=\"date I first joined Triton College\") }}.result)"
+    },
+    {
+      "qu_input": "QU(question=\"I went running with date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I went running\") }}, attr_names=[\"start_date\"], attr_types=[date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"I went running\")",
+      "qu_plan": "RETRIEVE(query=\"I went running\")"
+    },
+    {
+      "qu_input": "QU(question=\"date I first joined Triton College\")",
+      "qu_plan": "MIN(l={{ QU(question=\"date I joined Triton College\") }}, attr_name=\"join_date\")"
+    },
+    {
+      "qu_input": "QU(question=\"date I joined Triton College\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I joined Triton College\") }}, attr_names=[\"join_date\"], attr_types=[date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"I joined Triton College\")",
+      "qu_plan": "RETRIEVE(query=\"I joined Triton College\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"which attractions did we visit when in Rome\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"attractions we visited in Rome\") }}, attr_names=[\"attraction_name\"], attr_types=[str])"
+    },
+    {
+      "qu_input": "QU(question=\"attractions we visited in Rome\")",
+      "qu_plan": "JOIN(l1={{ QU(question=\"attractions we visited with date\") }}, l2={{ QU(question=\"we were in Rome with start and end date\") }}, condition=\"i1.visit_date >= i2.start_date and i1.visit_date <= i2.end_date\")"
+    },
+    {
+      "qu_input": "QU(question=\"attractions we visited with date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"attractions I visited\") }}, attr_names=[\"visit_date\"], attr_types=[date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"attractions I visited\")",
+      "qu_plan": "RETRIEVE(query=\"attractions I visited\")"
+    },
+    {
+      "qu_input": "QU(question=\"we were in Rome with start and end date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I was in Rome\") }}, attr_names=[\"start_date, end_date\"], attr_types=[date.fromisoformat, date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"I was in Rome\")",
+      "qu_plan": "RETRIEVE(query=\"I was in Rome\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"num of articles bought online this April?\")",
+      "qu_plan": "SUM(l={{ QU(question=\"articles bought online this April\") }}, attr_name=\"quantity\")"
+    },
+    {
+      "qu_input": "QU(question=\"articles bought online this April\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"articles bought online with purchase date\") }}, filter=lambda attr: attr[\"purchase_date\"].year == date.today().year and attr[\"purchase_date\"].month == 4)"
+    },
+    {
+      "qu_input": "QU(question=\"articles bought online with purchase date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"articles bought online\") }}, attr_names=[\"purchase_date\", \"quantity\"], attr_types=[date.fromisoformat, int])"
+    },
+    {
+      "qu_input": "QU(question=\"articles bought online\")",
+      "qu_plan": "RETRIEVE(query=\"I bought an article online\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"in 2019, how many posts did I create?\")",
+      "qu_plan": "SUM(l={{ QU(question=\"number of posts I created in 2019 grouped by month\") }}, attr_name=\"num_posts\")"
+    },
+    {
+      "qu_input": "QU(question=\"number of posts I created in 2019 grouped by month\")",
+      "qu_plan": "MAP(l={{ QU(question=\"posts I created in 2019 grouped by month\") }}, fct=len, res_name=\"num_posts\")"
+    },
+    {
+      "qu_input": "QU(question=\"posts I created in 2019 grouped by month\")",
+      "qu_plan": "GROUP_BY(l={{ QU(question=\"posts I created in 2019 with creation month\") }}, attr_names=[\"month\"])"
+    },
+    {
+      "qu_input": "QU(question=\"posts I created in 2019 with creation month\")",
+      "qu_plan": "MAP(l={{ QU(question=\"posts I created in 2019 with creation date\") }}, fct=lambda d: (d[\"start_date\"].month, d[\"start_date\"].year), res_name=\"month\")"
+    },
+    {
+      "qu_input": "QU(question=\"posts I created in 2019 with creation date\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"posts I created with creation date\") }}, filter=lambda d: d[\"creation_date\"].year == 2019)"
+    },
+    {
+      "qu_input": "QU(question=\"posts I created with creation date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"posts I created\") }}, attr_names=[\"creation_date\"], attr_types=[date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"posts I created\")",
+      "qu_plan": "RETRIEVE(query=\"I created a social media post\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"how often do I post on weekends?\")",
+      "qu_plan": "APPLY(l={{ QU(question=\"social media posts I created on weekends\") }}, fct=len)"
+    },
+    {
+      "qu_input": "QU(question=\"social media posts I created on weekends\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"all my social media posts with dates\") }}, filter=lambda attr: attr[\"date\"].weekday() in [5, 6])"
+    },
+    {
+      "qu_input": "QU(question=\"all my social media posts with dates\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"all my social media posts\") }}, attr_names=[\"date\"], attr_types=[date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"all my social media posts\")",
+      "qu_plan": "RETRIEVE(query=\"my social media posts\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"longest movie I ever watched?\")",
+      "qu_plan": "ARGMAX(l={{ QU(question=\"movies I watched with duration\") }}, arg_attr_name=\"duration\", val_attr_name=\"movie_title\")"
+    },
+    {
+      "qu_input": "QU(question=\"movies I watched with duration\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I watched a movie\") }}, attr_names=[\"movie_title\", \"duration\"], attr_types=[str, float])"
+    },
+    {
+      "qu_input": "QU(question=\"I watched a movie\")",
+      "qu_plan": "RETRIEVE(query=\"I watched a movie\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"on which weekday do I watch movies the most?\")",
+      "qu_plan": "ARGMAX(l={{ QU(question=\"number of movies watched per weekday\") }}, arg_attr_name=\"count\", val_attr_name=\"weekday\")"
+    },
+    {
+      "qu_input": "QU(question=\"number of movies watched per weekday\")",
+      "qu_plan": "MAP(l={{ QU(question=\"movies watched grouped by weekday\") }}, fct=len, res_name=\"count\")"
+    },
+    {
+      "qu_input": "QU(question=\"movies watched grouped by weekday\")",
+      "qu_plan": "GROUP_BY(l={{ QU(question=\"movies watched with weekday\") }}, attr_names=[\"weekday\"])"
+    },
+    {
+      "qu_input": "QU(question=\"movies watched with weekday\")",
+      "qu_plan": "MAP(l={{ QU(question=\"movies watched with start date\") }}, fct=lambda d: d[\"start_date\"].weekday(), res_name=\"weekday\")"
+    },
+    {
+      "qu_input": "QU(question=\"movies watched with start date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I watched a movie\") }}, attr_names=[\"start_date\"], attr_types=[date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"I watched a movie\")",
+      "qu_plan": "RETRIEVE(query=\"I watched a movie\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"average number of dentist appointments per year (last 5 years)?\")",
+      "qu_plan": "AVG(l={{ QU(question=\"number of dentist appointments per year (last 5 years)\") }}, attr_name=\"appointment_count\")"
+    },
+    {
+      "qu_input": "QU(question=\"number of dentist appointments per year (last 5 years)\")",
+      "qu_plan": "MAP(l={{ QU(question=\"dentist appointments grouped by year (last 5 years)\") }}, fct=len, res_name=\"appointment_count\")"
+    },
+    {
+      "qu_input": "QU(question=\"dentist appointments grouped by year (last 5 years)\")",
+      "qu_plan": "GROUP_BY(l={{ QU(question=\"my dentist appointments in the last 5 years\") }}, attr_names=[\"year\"])"
+    },
+    {
+      "qu_input": "QU(question=\"my dentist appointments in the last 5 years\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"my dentist appointments with year\") }}, filter=lambda attr: attr[\"year\"] >= (date.today().year - 5))"
+    },
+    {
+      "qu_input": "QU(question=\"my dentist appointments with year\")",
+      "qu_plan": "MAP(l={{ QU(question=\"my dentist appointments with date\") }}, fct=lambda attr: attr[\"date\"].year, res_name=\"year\")"
+    },
+    {
+      "qu_input": "QU(question=\"my dentist appointments with date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"my dentist appointments\") }}, attr_names=[\"date\"], attr_types=[date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"my dentist appointments\")",
+      "qu_plan": "RETRIEVE(query=\"I went to the dentist\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"which doctors did I visit last calendar year?\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"doctor visits last calendar year\") }}, attr_names=[\"doctor_name\"], attr_types=[str])"
+    },
+    {
+      "qu_input": "QU(question=\"doctor visits last calendar year\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"doctor visits with date and doctor name\") }}, filter=lambda attr: attr[\"visit_date\"].year == (date.today().year - 1))"
+    },
+    {
+      "qu_input": "QU(question=\"doctor visits with date and doctor name\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I visited a doctor\") }}, attr_names=[\"visit_date\", \"doctor_name\"], attr_types=[date.fromisoformat, str])"
+    },
+    {
+      "qu_input": "QU(question=\"I visited a doctor\")",
+      "qu_plan": "RETRIEVE(query=\"I visited a doctor\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"how many products did I order last month?\")",
+      "qu_plan": "SUM(l={{ QU(question=\"my online orders last month with product quantities\") }}, attr_name=\"product_quantity\")"
+    },
+    {
+      "qu_input": "QU(question=\"my online orders last month with product quantities\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"my online orders last month\") }}, attr_names=[\"product_quantity\"], attr_types=[int])"
+    },
+    {
+      "qu_input": "QU(question=\"my online orders last month\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"my online orders with date\") }}, filter=lambda attr: attr[\"order_date\"].month == (date.today() - relativedelta(months=1)).month and attr[\"order_date\"].year == (date.today() - relativedelta(months=1)).year)"
+    },
+    {
+      "qu_input": "QU(question=\"my online orders with date\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"my online orders\") }}, attr_names=[\"order_date\"], attr_types=[date.fromisoformat])"
+    },
+    {
+      "qu_input": "QU(question=\"my online orders\")",
+      "qu_plan": "RETRIEVE(query=\"my online orders\")"
+    }
+  ],
+  [
+    {
+      "qu_input": "QU(question=\"how often did I meet with Robert in the park?\")",
+      "qu_plan": "APPLY(l={{ QU(question=\"I met with Robert in the park\") }}, fct=len)"
+    },
+    {
+      "qu_input": "QU(question=\"I met with Robert in the park\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"I met with Robert with location\") }}, filter=lambda attr: \"park\" in attr[\"location\"].lower())"
+    },
+    {
+      "qu_input": "QU(question=\"I met with Robert with location\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I met with Robert\") }}, attr_names=[\"location\"], attr_types=[str])"
+    },
+    {
+      "qu_input": "QU(question=\"I met with Robert\")",
+      "qu_plan": "FILTER(l={{ QU(question=\"I met with someone with participants\") }}, filter=lambda attr: any(\"robert\" in p.lower() for p in attr[\"participants\"]))"
+    },
+    {
+      "qu_input": "QU(question=\"I met with someone with participants\")",
+      "qu_plan": "SELECT(l={{ QU(question=\"I met with someone\") }}, attr_names=[\"participants\"], attr_types=[list])"
+    },
+    {
+      "qu_input": "QU(question=\"I met with someone\")",
+      "qu_plan": "RETRIEVE(query=\"I met with someone\")"
+    }
+  ]
+]

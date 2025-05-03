@@ -1,0 +1,50 @@
+### Benchmark
+benchmark: 
+    benchmark: "perqa"
+    benchmark_dir: "./data/benchmarks/perqa"
+    result_dir: "./data/results/perqa/query_generation_sft"
+
+# SQL generation
+query_generation:
+    mode_options: ["openai", "instruct_model", "seq2seq", "causal"] 
+    mode: "causal"
+    # general
+    causal: True
+    instruction: "./prompts/instruction-sql_query_generation.txt"
+    model: "data/models/llama/Llama-3.2-1B-Instruct"
+    tokenizer_path: "./data/tokenizers/qu-tokenizer-llama-3.2-1B-Instruct"
+    trained_model_path: "./data/models/perqa/query_generation_sft-llama-3.2-1B-Instruct"
+    max_input_length: 800 # for derive_data fct
+    max_output_length: 512 # for derive_data fct
+    max_length: 1024
+    prompt: "./prompts/prompt-sql_query_generation.txt"
+    icl_examples: "./prompts/icl-sql_query_generation.json"
+    sql_schema: "./prompts/sql_schema.txt"
+    # training
+    data_path:
+      train: "./data/training_data/perqa/query_generation/train_data.jsonl"
+      dev: "./data/training_data/perqa/query_generation/dev_data.jsonl"
+    result_path: "./data/results/perqa/query_generation_sft/query_generation_result_sft.jsonl"
+    # training - training params
+    training_params:
+        output_dir: "./data/models/checkpoints/perqa/query_generation_sft-model-llama-3.2-1B-Instruct"
+        num_train_epochs: 4
+        learning_rate: 0.0001
+        per_device_train_batch_size: 4
+        per_device_eval_batch_size: 4
+        warmup_ratio: 0.05
+        weight_decay: 0.01
+        logging_dir: "./logs"
+        logging_steps: 10
+        eval_strategy: epoch
+        save_strategy: epoch
+        save_total_limit: 1
+        load_best_model_at_end: True
+        lr_scheduler_type: "linear"
+        save_safetensors: False
+    # model - inference
+    sampling_params:
+        num_return_sequences: 1
+        do_sample: False
+        temperature: 0.0
+        max_new_tokens: 200

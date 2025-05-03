@@ -1,0 +1,37 @@
+### Benchmark
+benchmark: 
+    benchmark: "perqa"
+    benchmark_dir: "./data/benchmarks/perqa"
+    result_dir: "./data/results/perqa"
+
+
+### RETRIEVE
+crossencoder:
+    # crossencoder - general paths
+    crossencoder_train_data: "./data/training_data/perqa/crossencoder/train_data.jsonl"
+    crossencoder_dev_data: "./data/training_data/perqa/crossencoder/dev_data.jsonl"
+
+    # crossencoder - general
+    crossencoder_model: "cross-encoder/ms-marco-MiniLM-L-2-v2"
+    crossencoder_tokenizer_path: "./data/tokenizers/crossencoder-tokenizer-ms-marco-MiniLM-L-2-v2"
+    crossencoder_trained_model_path: "./data/models/perqa/crossencoder-trained_model_events-ms-marco-MiniLM-L-2-v2"
+    crossencoder_max_length: 512
+    crossencoder_inference_batch_size: 128  # might be different from training time due to different device
+
+    # crossencoder - training params
+    training_params:
+        output_dir: "./data/models/checkpoints/perqa/crossencoder-model_events-MiniLM-L-2-v2"
+        num_train_epochs: 5
+        learning_rate: 0.00005
+        per_device_train_batch_size: 64
+        per_device_eval_batch_size: 256
+        weight_decay: 0.001
+        logging_dir: "./logs"
+        logging_steps: 1000
+        eval_strategy: epoch
+        save_strategy: epoch
+        save_total_limit: 3
+        load_best_model_at_end: True
+        metric_for_best_model: "accuracy"
+        greater_is_better: True
+        save_safetensors: False

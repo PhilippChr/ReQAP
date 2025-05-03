@@ -1,0 +1,53 @@
+### Benchmark
+benchmark: 
+    benchmark: "perqa"
+    benchmark_dir: "./data/benchmarks/perqa"
+    result_dir: "./data/results/perqa"
+
+
+### EXTRACT
+extract:
+    # extract - model
+    simple_lookup_threshold: 0.7
+    model: "lucadiliello/bart-small"
+    tokenizer_path: "./data/tokenizers/perqa/extract-tokenizer-bart-small"
+    trained_model_path: "./data/models/perqa/extract-trained_model-bart-small"
+    max_input_length: 512
+    max_output_length: 512
+    # extract - model - training
+    extract_training:
+        extract_data:
+            train:
+                aliases: "./data/training_data/perqa/extract/train_data_aliases.jsonl"
+            dev:
+                aliases: "./data/training_data/perqa/extract/dev_data_aliases.jsonl"
+        evaluation_data:
+            very_simple: "./data/training_data/perqa/extract/dev_data_very_simple.jsonl"
+            negative: "./data/training_data/perqa/extract/dev_data_negative.jsonl"
+            aliases: "./data/training_data/perqa/extract/dev_data_aliases.jsonl"
+    training_params:
+        output_dir: "./data/models/checkpoints/perqa//extract-model-bart-small"
+        num_train_epochs: 3
+        learning_rate: 0.0001
+        per_device_train_batch_size: 16
+        per_device_eval_batch_size: 16
+        weight_decay: 0.01
+        logging_dir: "./logs"
+        logging_steps: 10
+        eval_strategy: epoch
+        save_strategy: epoch
+        save_total_limit: 3
+        load_best_model_at_end: True
+        predict_with_generate: True
+        metric_for_best_model: "exact_match"
+        greater_is_better: True
+        generation_max_length: 128
+        gradient_accumulation_steps: 8
+        eval_accumulation_steps: 8
+        save_safetensors: False
+    # extract - model - inference
+    generation_params:
+        num_beams: 1
+        no_repeat_ngram_size: 3
+        forced_bos_token_id: 0
+

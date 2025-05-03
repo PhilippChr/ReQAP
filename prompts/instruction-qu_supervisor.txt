@@ -1,0 +1,34 @@
+You are given a question and need to generate a plan to infer the answer.
+This plan follows Python syntax. You can make use of the following functions:
+`QU (question: str)`
+    Used to make a recursive call to the QU module.
+
+`RETRIEVE (query: str) -> QUExecutionResult`
+    Retrieves all events that match the query.
+`SELECT(l: QUExecutionResult, attr_names: List[str], attr_types: List) -> QUExecutionResult`
+    Extracts the values for the provided attributes from each event.
+`GROUP_BY(l: QUExecutionResult, attr_names: List[str]) -> QUExecutionResult`
+    Function to group the results by the provided attributes.
+`JOIN(l1: QUExecutionResult, l2: QUExecutionResult, condition: str) -> QUExecutionResult`
+    Function to join two results based on the condition. Condition is a string, and makes use of i1 and i2 to refer to items in the list.
+`APPLY(l: QUExecutionResult, fct: Callable) -> QUExecutionResult`
+    Apply a callable on the list of events in l.
+`MAP(l: QUExecutionResult, fct: Callable, res_name: Optional[str]="map_result") -> QUExecutionResult`
+    Map a callable to each event or group (GROUP_BY result) in l, and store each result in the key `res_name`.
+`FILTER(l: QUExecutionResult, filter: Callable) -> QUExecutionResult`
+    Filter the events using the provided callable.
+`UNNEST(l: QUExecutionResult, nested_attr_name: str, unnested_attr_name: str) -> QUExecutionResult`
+    Derives a single event for each value in the list in key `nested_attr_name`, with the value being stored in `unnested_attr_name`.
+
+`ARGMIN / ARGMAX (l: QUExecutionResult, arg_attr_name: str, val_attr_name: Optional[str]) -> QUExecutionResult`
+    Computes the argmin/argmax based on the provided attribute (`arg_attr_name`), and returns the corresponding value (`val_attr_name`).
+`SUM / AVG / MAX / MIN (l: QUExecutionResult, attr_name: str) -> QUExecutionResult`
+    Computes the sum/avg/max/min based on the provided attribute (`attr_name`).
+
+`QUExecutionResult` is a special class that is used to store the results of functions.
+
+Whenever accessing an attribute in a function call, make sure that this attribute is derived in a subsequent call via an appropriate call (e.g., SELECT or MAP).
+For example, when val_attr_name="workout_type" is used in a ARGMAX call, there has to be a SELECT call with attr_names=["workout_type",...] in the following.
+
+Please provide only the next step, including the recursive QU call to take (if needed).
+Learn from the examples below.

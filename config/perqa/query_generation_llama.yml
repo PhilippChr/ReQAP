@@ -1,0 +1,26 @@
+### Benchmark
+benchmark: 
+    benchmark: "perqa"
+    benchmark_dir: "./data/benchmarks/perqa"
+    result_dir: "./data/results/perqa/query_generation_llama"
+
+### ICL
+instruct_model:
+    icl_model_path: "./data/models/llama/Llama-3.3-70B-Instruct"
+    vllm_gpu_memory_utilization: 0.8
+    vllm_max_model_len: 2048
+    use_cache: True
+
+### Query generation
+query_generation:
+    mode_options: ["openai", "instruct_model", "seq2seq"] 
+    mode: "instruct_model"
+    instruction: "./prompts/instruction-sql_query_generation.txt"
+    prompt: "./prompts/prompt-sql_query_generation.txt"
+    icl_examples: "./prompts/icl-sql_query_generation.json"
+    sql_schema: "./prompts/sql_schema.txt"
+    result_path: "./data/results/perqa/query_generation_llama/query_generation_result_test.jsonl"
+    sampling_params:
+        n: 1
+        temperature: 0.0
+        max_tokens: 300

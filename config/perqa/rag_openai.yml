@@ -1,0 +1,82 @@
+### Benchmark
+benchmark: 
+    benchmark: "perqa"
+    benchmark_dir: "./data/benchmarks/perqa"
+    result_dir: "./data/results/perqa/rag_openai"
+
+### ICL
+openai: 
+    ### OpenAI LLM
+    openai_model: "gpt-4o"
+    openai_organization: "<YOUR_ORG>"
+    openai_project: "<YOUR_PROJECT>"
+    openai_key: "<YOUR_KEY>"
+    use_cache: False
+
+answering:
+    answering_mode_options: ["openai", "instruct_model", "seq2seq"] 
+    answering_mode: "openai"
+    instruction: "./prompts/instruction-rag_answering.txt"
+    prompt: "./prompts/prompt-rag_answering.txt"
+    icl_examples: "./prompts/icl-rag_answering.json"
+    max_num_events: 100
+
+### RETRIEVE
+# splade
+splade:
+    splade_indices_dir: "./data/splade_indices/perqa"
+    splade_model_type_or_path: "./data/models/splade-cocondenser-ensembledistil"
+    splade_tokenizer_type: "./data/models/splade-cocondenser-ensembledistil"
+    splade_max_length: 512
+    splade_index_batch_size: 8
+    splade_threshold: 0.1  # threshold for events derived by SPLADE in step 1 of RETRIEVE
+    splade_verbalize_events: True  # enables linearization of events for retrieval (slight improvements)
+crossencoder:
+    # crossencoder - training
+    max_num_events: 1000
+    crossencoder_model: "cross-encoder/ms-marco-MiniLM-L-2-v2"
+    crossencoder_tokenizer_path: "./data/tokenizers/crossencoder-tokenizer-ms-marco-MiniLM-L-2-v2"
+    crossencoder_trained_model_path: "./data/models/perqa/crossencoder_rag-trained_model-ms-marco-MiniLM-L-2-v2"
+    crossencoder_max_length: 512
+    crossencoder_inference_batch_size: 128
+    # crossencoder - inference
+    model_events:
+        crossencoder_model: "cross-encoder/ms-marco-MiniLM-L-2-v2"
+        crossencoder_tokenizer_path: "./data/tokenizers/crossencoder-tokenizer-ms-marco-MiniLM-L-2-v2"
+        crossencoder_trained_model_path: "./data/models/perqa/crossencoder_rag-trained_model-ms-marco-MiniLM-L-2-v2"
+        max_length: 512
+        inference_batch_size: 128  # might be different from training time due to different device
+    model_patterns: False  # do not use ReQAP patterns model
+    retrieval_result_dir: "./data/results/perqa/rag_openai"
+    
+    # crossencoder - training
+    # => for training, we use the training data of the ReQAP crossencoder,
+    #    and utilize the dictionaries in the retrieve call sets
+    retrieve_calls_train_set: "./data/training_data/perqa/crossencoder/train_retrieve_calls.jsonl"
+    retrieve_calls_dev_set: "./data/training_data/perqa/crossencoder/dev_retrieve_calls.jsonl"
+    input_train_data: "./data/training_data/perqa/crossencoder/train_data.jsonl"
+    input_dev_data: "./data/training_data/perqa/crossencoder/dev_data.jsonl"
+    max_instances_per_query: 100
+    crossencoder_train_data: "./data/training_data/perqa/crossencoder_rag/train_data.jsonl"
+    crossencoder_dev_data: "./data/training_data/perqa/crossencoder_rag/dev_data.jsonl"
+    crossencoder_train_dataset: "./data/training_data/perqa/crossencoder_rag/train.pth"
+    crossencoder_dev_dataset: "./data/training_data/perqa/crossencoder_rag/dev.pth"
+    # crossencoder - training params
+    training_params:
+        output_dir: "./data/models/checkpoints/perqa/crossencoder_rag-model-MiniLM-L-2-v2"
+        num_train_epochs: 5
+        learning_rate: 0.00005
+        per_device_train_batch_size: 64
+        per_device_eval_batch_size: 256
+        weight_decay: 0.001
+        logging_dir: "./logs"
+        logging_steps: 1000
+        eval_strategy: "epoch"
+        save_strategy: "epoch"
+        save_total_limit: 3
+        load_best_model_at_end: True
+        metric_for_best_model: "accuracy"
+        greater_is_better: True
+        save_safetensors: False
+    retrieval_pattern:
+        apply: False  # do not use ReQAP patterns

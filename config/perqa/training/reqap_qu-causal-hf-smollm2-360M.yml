@@ -1,0 +1,47 @@
+### Benchmark
+benchmark: 
+    benchmark: "perqa"
+    benchmark_dir: "./data/benchmarks/perqa"
+    result_dir: "./data/results/perqa"
+
+### QU
+qu:
+    # qu - model
+    qu_causal_instr: prompts/instruction-qu_causal.txt
+    causal: True
+    model: "HuggingFaceTB/SmolLM2-360M-Instruct"
+    tokenizer_path: "./data/tokenizers/qu-tokenizer-SmolLM2-360M-Instruct"
+    trained_model_path: "./data/models/perqa/qu-trained_model-SmolLM2-360M-Instruct"
+    max_input_length: 800 # for derive_data fct
+    max_output_length: 512 # for derive_data fct
+    max_length: 1024
+    # qu - model - training
+    qu_data:
+        train: "./data/training_data/perqa/qu/train_data.jsonl"
+        dev: "./data/training_data/perqa/qu/dev_data.jsonl"
+    qu_training:
+        qu_correct_only: False
+        qu_data:
+            train: "./data/training_data/perqa/qu/train_data.jsonl"
+            dev: "./data/training_data/perqa/qu/dev_data.jsonl"
+    # qu - model - training params
+    training_params:
+        output_dir: "./data/models/checkpoints/perqa/qu-model-SmolLM2-360M-Instruct"
+        num_train_epochs: 4
+        learning_rate: 0.00001
+        per_device_train_batch_size: 4
+        per_device_eval_batch_size: 4
+        warmup_ratio: 0.05
+        weight_decay: 0.01
+        logging_dir: "./logs"
+        logging_steps: 10
+        eval_strategy: epoch
+        save_strategy: epoch
+        save_total_limit: 1
+        load_best_model_at_end: True
+        # eval_accumulation_steps: 8
+        lr_scheduler_type: "linear"
+        save_safetensors: False
+    # qu - model - inference
+    generation_params:
+        num_beams: 3

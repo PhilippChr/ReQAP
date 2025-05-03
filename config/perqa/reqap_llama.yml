@@ -1,0 +1,78 @@
+### Benchmark
+benchmark: 
+    benchmark: "perqa"
+    benchmark_dir: "./data/benchmarks/perqa"
+    result_dir: "./data/results/perqa/reqap_llama"
+
+### ICL
+instruct_model:
+    icl_model_path: "./data/models/llama/Llama-3.3-70B-Instruct"
+    vllm_gpu_memory_utilization: 0.8
+    vllm_max_model_len: 5000
+    use_cache: False
+
+### QU
+qu:
+    qu_execution_cache_size: 100  #EFFICIENCY / MEMORY trade-off
+    qu_mode_options: ["openai", "instruct_model", "seq2seq"] 
+    qu_mode: "instruct_model"
+    # qu - supervisor
+    qu_supervisor_instr: "./prompts/instruction-qu_supervisor.txt"
+    qu_supervisor_icl: "./prompts/icl-qu_supervisor.json"
+    qu_icl_selection_strategy: "dynamic"
+    qu_icl_num_examples: 8
+    qu_inference_batch_size: 512
+    qu_result_paths:
+        dev: "./data/results/perqa/reqap_llama/qu_dev.jsonl"
+        test: "./data/results/perqa/reqap_llama/qu_test.jsonl"
+    # qu - model - generation
+    sampling_params:
+        n: 1
+        temperature: 0.0
+    
+
+### RETRIEVE
+# splade
+splade:
+    splade_indices_dir: "./data/splade_indices/perqa"
+    splade_model_type_or_path: "./data/models/splade-cocondenser-ensembledistil"
+    splade_tokenizer_type: "./data/models/splade-cocondenser-ensembledistil"
+    splade_max_length: 512
+    splade_index_batch_size: 8
+    splade_threshold: 0.1  # threshold for events derived by SPLADE in step 1 of RETRIEVE
+    splade_verbalize_events: True  # enables linearization of events for retrieval (slight improvements)
+crossencoder:
+    # crossencoder - models
+    model_patterns: 
+        crossencoder_tokenizer_path: "./data/tokenizers/crossencoder-tokenizer-ms-marco-MiniLM-L-12-v2"
+        crossencoder_trained_model_path: "./data/models/perqa/crossencoder-trained_model_patterns-ms-marco-MiniLM-L-12-v2"
+        max_length: 50
+        inference_batch_size: 128
+    model_events: 
+        crossencoder_tokenizer_path: "./data/tokenizers/crossencoder-tokenizer-ms-marco-MiniLM-L-12-v2"
+        crossencoder_trained_model_path: "./data/models/perqa/crossencoder-trained_model_events-ms-marco-MiniLM-L-12-v2"
+        max_length: 512
+        inference_batch_size: 128  
+    # retrieval pattern
+    unified_negative_patterns: False  # whether candidate positive patterns can be used for pruning all (often noisy)
+    retrieval_pattern:
+        apply: True  # whether to utilize patterns to score events as sets
+        min_events_matched_inference: 100  # absolute frequency threshold for patterns
+
+### EXTRACT
+extract:
+    # extract - model
+    tokenizer_path: "./data/tokenizers/extract-tokenizer-bart-base"
+    trained_model_path: "./data/models/perqa/extract-trained_model-bart-base"
+    max_input_length: 512
+    max_output_length: 512
+    inference_batch_size: 128
+    extract_sample_size_simple_lookup: 50  # number of EXTRACT samples to identify a simple mapping (e.g., date -> start_date)
+    simple_lookup_threshold: 0.7 # threshold for exact matches for deriving simple mapping
+    extract_add_persona: True  # adds salient information for persona (e.g., list of friends)
+    merge_overlapping_events: True  # enables event de-duplication
+    # extract - model - generation
+    generation_params:
+        num_beams: 1
+        no_repeat_ngram_size: 3
+        forced_bos_token_id: 0

@@ -1,0 +1,90 @@
+[
+    {
+        "question": "longest workout I ever did?",
+        "query": "SELECT workout_type, MAX(duration) AS longest_duration FROM workout GROUP BY workout_type ORDER BY longest_duration DESC LIMIT 1;",
+        "answers": [
+            "run"
+        ],
+        "id": "dev_persona_0-question_0",
+        "q_id": 0,
+        "original_persona": "persona_18",
+        "reference_date": "2024-11-25"
+    },
+    {
+        "question": "How many times did I watch movies?",
+        "query": "SELECT COUNT(*) as num_times FROM movie_stream;",
+        "answers": [
+            903
+        ],
+        "id": "dev_persona_0-question_1",
+        "q_id": 1,
+        "original_persona": "persona_18",
+        "reference_date": "2024-11-25"
+    },
+    {
+        "question": "What's the name of the song I listened to most in 2022?",
+        "query": "WITH music_streams AS ( SELECT * FROM music_stream WHERE start_date::DATE >= '2022-01-01' AND start_date::DATE <= '2022-12-31' ) SELECT song_name, COUNT(*) AS num_streams FROM music_streams GROUP BY song_name ORDER BY num_streams DESC LIMIT 1",
+        "answers": [
+            "Missing You Now"
+        ],
+        "id": "dev_persona_0-question_2",
+        "q_id": 2,
+        "original_persona": "persona_18",
+        "reference_date": "2024-11-25"
+    },
+    {
+        "question": "What is the total distance I ran in kilometers after I started my new job?",
+        "query": "WITH new_job_date AS( SELECT MAX(start_date::DATE) AS job_start_date FROM personal_milestone WHERE event = 'having_a_new_job') SELECT SUM(distance) AS total_running_km FROM workout WHERE workout_type = 'run' AND start_date::DATE >= (SELECT job_start_date FROM new_job_date);",
+        "answers": [
+            778.85
+        ],
+        "id": "dev_persona_0-question_3",
+        "q_id": 3,
+        "original_persona": "persona_18",
+        "reference_date": "2024-11-25"
+    },
+    {
+        "question": "what is the average duration of my music streams?",
+        "query": "SELECT AVG(duration) AS avg_duration FROM music_stream;",
+        "answers": [
+            234.06
+        ],
+        "id": "dev_persona_0-question_4",
+        "q_id": 4,
+        "original_persona": "persona_18",
+        "reference_date": "2024-11-25"
+    },
+    {
+        "question": "How many times did I watch a TV series after biking?",
+        "query": "WITH tv AS(SELECT start_date, start_time FROM tvseries_stream), bike AS(SELECT end_date AS bike_end_date, end_time AS bike_end_time FROM workout WHERE workout_type = 'bike') SELECT COUNT(DISTINCT start_date) AS num FROM tv m JOIN bike pf ON m.start_date::DATE = pf.bike_end_date::DATE AND m.start_time > pf.bike_end_time;",
+        "answers": [
+            0
+        ],
+        "id": "dev_persona_0-question_5",
+        "q_id": 5,
+        "original_persona": "persona_18",
+        "reference_date": "2024-11-25"
+    },
+    {
+        "question": "What is the name of the most recent movie I watched?",
+        "query": "SELECT movie_title FROM movie_stream ORDER BY start_date::DATE DESC, start_time DESC LIMIT 1;",
+        "answers": [
+            "Inteqam: The Perfect Game"
+        ],
+        "id": "dev_persona_0-question_6",
+        "q_id": 6,
+        "original_persona": "persona_18",
+        "reference_date": "2024-11-25"
+    },
+    {
+        "question": "What is the name of the artist I listened to most often?",
+        "query": "SELECT p.artist_name, COUNT(*) AS num_songs FROM music_stream m, unnest(from_json(m.song_artist, '[\"json\"]')) AS p(artist_name) GROUP BY p.artist_name ORDER BY num_songs DESC LIMIT 1;",
+        "answers": [
+            "Lady Gaga"
+        ],
+        "id": "dev_persona_0-question_7",
+        "q_id": 7,
+        "original_persona": "persona_18",
+        "reference_date": "2024-11-25"
+    }
+]
