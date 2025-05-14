@@ -12,7 +12,7 @@ case "$1" in
 "data")
     echo "Downloading data..."
     wget http://qa.mpi-inf.mpg.de/reqap/data.zip
-    unzip data.zip -d data
+    unzip data.zip -d .
     rm data.zip
     echo "Successfully downloaded data!"
     ;;
