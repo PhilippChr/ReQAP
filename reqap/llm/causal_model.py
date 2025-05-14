@@ -24,7 +24,7 @@ class CausalModel(torch.nn.Module):
             self.model = AutoModelForCausalLM.from_pretrained(causal_config.model, device_map="auto")
         else:
             logger.info(f"Loading model from fine-tuned checkpoint at `{causal_config.trained_model_path}`")
-            self.model = AutoModelForCausalLM.from_pretrained(causal_config.trained_model_path, device_map="auto")
+            self.model = AutoModelForCausalLM.from_pretrained(causal_config.trained_model_path, device_map="cuda:0")  # fixed issues with multi-GPU setup
         num_params = sum(p.numel() for p in self.model.parameters() if p.requires_grad)
         logger.info(f"Loaded model has {num_params} trainable parameters.")
         # load tokenizer
@@ -83,7 +83,7 @@ class CausalModel(torch.nn.Module):
                     return_tensors="pt"
                 )
                 if torch.cuda.is_available():
-                    input_encodings = input_encodings.to(torch.device("cuda"))
+                    input_encodings = {k: v.to("cuda:0") for k, v in input_encodings.items()}
                 outputs = self.model.generate(
                     input_ids=input_encodings["input_ids"],
                     attention_mask=input_encodings["attention_mask"],

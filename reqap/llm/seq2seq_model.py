@@ -48,11 +48,18 @@ class Seq2SeqModel(torch.nn.Module):
             self.model = AutoModelForSeq2SeqLM.from_pretrained(seq2seq_config.trained_model_path)
         num_params = sum(p.numel() for p in self.model.parameters() if p.requires_grad)
         logger.info(f"Loaded model has {num_params} trainable parameters.")
+        
         # load tokenizer
         if seq2seq_config.get("tokenizer_path") and os.path.exists(seq2seq_config.tokenizer_path):
             self.tokenizer = AutoTokenizer.from_pretrained(seq2seq_config.tokenizer_path, clean_up_tokenization_spaces=True)
         else:
             self.tokenizer = AutoTokenizer.from_pretrained(seq2seq_config.model, clean_up_tokenization_spaces=True)
+
+        # enable inference on multiple GPUs
+        if torch.cuda.device_count() > 1:
+            logger.debug(f"Using {torch.cuda.device_count()} GPUs for seq2seq inference")
+            self.model = torch.nn.DataParallel(self.model)
+            self.model = self.model.to(torch.device("cuda")) 
 
     def train(self, train_dataset: Dataset, dev_dataset: Dataset, compute_metrics_fct: Callable=None) -> Seq2SeqTrainer:
         def _compute_metrics(eval_preds):
@@ -101,7 +108,8 @@ class Seq2SeqModel(torch.nn.Module):
                 input_encodings = input_encodings.to(torch.device("cuda"))
             self.model.eval()
             with torch.no_grad():
-                outputs = self.model.generate(
+                model = self.model.module if isinstance(self.model, torch.nn.DataParallel) else self.model
+                outputs = model.generate(
                     input_ids=input_encodings["input_ids"],
                     attention_mask=input_encodings["attention_mask"],
                     max_length=self.seq2seq_config.max_output_length,

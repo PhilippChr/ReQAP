@@ -93,6 +93,12 @@ class CrossEncoderModel(torch.nn.Module):
         else:
             self.tokenizer = AutoTokenizer.from_pretrained(ce_config.crossencoder_model, clean_up_tokenization_spaces=True)
 
+        # enable inference on multiple GPUs
+        if torch.cuda.device_count() > 1:
+            logger.debug(f"Using {torch.cuda.device_count()} GPUs for crossencoder")
+            self.model = torch.nn.DataParallel(self.model)
+            self.model = self.model.to(torch.device("cuda"))
+
     def train(self, train_dataset: Dataset, dev_dataset: Dataset):
         # arguments for training
         logger.debug(f"Training arguments in use: {self.ce_config.training_params}")
