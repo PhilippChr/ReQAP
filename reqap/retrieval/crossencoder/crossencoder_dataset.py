@@ -220,7 +220,7 @@ class DatasetCrossEncoderFactory:
     def drop_where_clause(operator_tree_dict: Dict, retrieve_call: str, parents: List[str]=list()):
         """
         Identify whether to drop the WHERE clause or not.
-        Traverses the QUPlan dict, retains the parent calls for each traversal,
+        Traverses the OperatorTree dict, retains the parent calls for each traversal,
         and once the actual retrieve_call is reached, checks if a sequence of SELECT + FILTER operations is before the retrieve_call.
         If so, this structure is supposed to match the WHERE clause, which indicates that the WHERE clause
         is not resolved within the RETRIEVE call in the Operator Tree.

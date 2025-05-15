@@ -18,7 +18,7 @@ class OperatorTree:
     @classmethod
     def from_operator_tree_dicts(cls, operator_tree_dicts: List[Dict]) -> List["OperatorTree"]:
         """
-        Load multiple QUPlan objects from a list of QUPlan dicts,
+        Load multiple OperatorTree objects from a list of OperatorTree dicts,
         with keys `qu_branch_input`, `qu_input`, and `childs`.
         Used to load Operator trees after stored via `to_dict`.
         """
@@ -27,16 +27,16 @@ class OperatorTree:
     @classmethod
     def from_operator_tree_dict(cls, operator_tree_dict: Dict) -> "OperatorTree":
         """
-        Load a single QUPlan object from a QUPlan dict,
+        Load a single OperatorTree object from a OperatorTree dict,
         with keys `qu_branch_input`, `qu_input`, and `childs`.
-        Used to load a QUPlan after stored via `to_dict`.
+        Used to load a OperatorTree after stored via `to_dict`.
         """
         return cls(operator_tree_dict)
     
     @classmethod
     def from_list(cls, operator_tree_list: List[Dict]) -> "OperatorTree":
         """
-        Load a single QUPlan object from a list of dicts with keys `qu_input` and `operator_tree`.
+        Load a single OperatorTree object from a list of dicts with keys `qu_input` and `operator_tree`.
         Used to check ICL example data.
         """
         def dict_from_list(operator_tree_list: List[Dict]) -> Dict:
@@ -59,7 +59,7 @@ class OperatorTree:
         childs = [dict_from_list(operator_tree_list)]
         qu_input = "{{ " + qu_input + " }}"
             
-        # construct QUPlan
+        # construct OperatorTree
         operator_tree_dict = {
             "qu_branch_input": None,
             "qu_input": qu_input,
@@ -116,7 +116,7 @@ class OperatorTree:
         """
         Searches the tree for the next unprocessed node via recursive calls.
         Processes the tree in depth-first mode.
-        Returns the node (=QUPlan) which needs to be processed next,
+        Returns the node (=OperatorTree) which needs to be processed next,
         or None in case the whole plan is processed already.
         Make sure to run this function from the root node.
         """

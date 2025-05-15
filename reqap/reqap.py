@@ -9,7 +9,7 @@ from datetime import date
 from reqap.library.metrics import hit_at_1
 from reqap.library.library import get_persona_names, load_persona_dict, load_json, load_jsonl, store_jsonl, clear_file, handle_output_file, batchify, avg
 from reqap.qu.qu_module import QuestionUnderstandingModule
-from reqap.qu.operator_tree_execution import QUPlanExecution
+from reqap.qu.operator_tree_execution import OperatorTreeExecution
 from reqap.qu.operator_tree import OperatorTree
 from reqap.retrieval.retrieval import Retrieval
 from reqap.extract.extract_module import ExtractModule
@@ -172,7 +172,7 @@ class ReQAP:
                 logger.info(f"Persona {i}: avg(relaxed_hit_at_1_20_list)={avg(relaxed_hit_at_1_20_list)} ({sum(relaxed_hit_at_1_20_list)}/{len(relaxed_hit_at_1_20_list)})")
                 logger.info(f"Persona {i}: num failures={num_failures} ({num_failures}/{len(hit_at_1_list)})")
 
-    def run_on_question(self, question: str, qu_engine: QUPlanExecution, reference_date: date=date.today()):
+    def run_on_question(self, question: str, qu_engine: OperatorTreeExecution, reference_date: date=date.today()):
         """
         Run the full ReQAP pipeline on a single question.
         """
@@ -314,7 +314,7 @@ class ReQAP:
         ### Option 2: load output of Operator Tree creation
         # icl_examples_path = "./data/dev/operator_trees_debug.jsonl"
         # icl_examples = load_jsonl(icl_examples_path)
-        # operator_trees = [operator_tree for instance in icl_examples for operator_tree in QUPlan.from_operator_tree_dicts(instance["operator_trees"])]
+        # operator_trees = [operator_tree for instance in icl_examples for operator_tree in OperatorTree.from_operator_tree_dicts(instance["operator_trees"])]
 
         output_path = f"{result_dir}/icl_result.jsonl"
         clear_file(output_path)
@@ -357,11 +357,11 @@ class ReQAP:
         self.qu = QuestionUnderstandingModule(self.config.qu, train=False, icl_model=icl_model)
         self.qu_loaded = True
     
-    def load_engine(self, obs_events_csv_path: str, splade_index_path: str, persona_dict_path: str = None) -> QUPlanExecution:
+    def load_engine(self, obs_events_csv_path: str, splade_index_path: str, persona_dict_path: str = None) -> OperatorTreeExecution:
         retrieval = Retrieval(self.config, obs_events_csv_path, splade_index_path)
         retrieval.load()
         extract = ExtractModule(self.config.extract)
         extract.load()
         persona_dict = load_persona_dict(persona_dict_path) if self.config.extract.extract_add_persona and persona_dict_path else None
-        qu_engine = QUPlanExecution(qu_config=self.config.qu, retrieval=retrieval, extract=extract, persona_dict=persona_dict)
+        qu_engine = OperatorTreeExecution(qu_config=self.config.qu, retrieval=retrieval, extract=extract, persona_dict=persona_dict)
         return qu_engine

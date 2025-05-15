@@ -34,7 +34,7 @@ from reqap.qu.qu_operators import (
 )
 
 
-class QUPlanExecution:
+class OperatorTreeExecution:
     RESTRICTED_GLOBALS = {"__builtins__": {}} 
     RESTRICTED_LOCALS = {}
 
@@ -50,7 +50,7 @@ class QUPlanExecution:
         self.dev_mode = dev_mode  # in this mode, any failure in execution will raise an Exception, which will not be catched
         self.cache = QUExecutionCache(qu_config.qu_execution_cache_size)
         if persona_dict is None:
-            logger.warning("Initiated QUPlanExecution with persona_dict=None")    
+            logger.warning("Initiated OperatorTreeExecution with persona_dict=None")    
         self.persona_dict = persona_dict
 
     def derive_result(self, operator_trees: List[OperatorTree], run_all: bool=False, reference_date: date=date.today(), error_file: Optional[str]=None, time_budget: int=600) -> Tuple[Dict, Any | None, bool]:
@@ -85,7 +85,7 @@ class QUPlanExecution:
                     results.append(res)
                 else:
                     return res
-            except (self.QUPlanExecutionError, TimeoutError) as e:
+            except (self.OperatorTreeExecutionError, TimeoutError) as e:
                 if not error_file is None:
                     failure_case = {
                         "error": str(e),
@@ -153,15 +153,15 @@ class QUPlanExecution:
             exec_result = eval(prepared_qu_call)
         except Exception as e:
             traceback.print_tb(e.__traceback__)
-            raise self.QUPlanExecutionError(
-                f"Exception {type(e)} ({e}) catched in `QUPlanExecution.execute_qu_call` when executing `{prepared_qu_call}` (was `{qu_call}` before preparation)."
+            raise self.OperatorTreeExecutionError(
+                f"Exception {type(e)} ({e}) catched in `OperatorTreeExecution.execute_qu_call` when executing `{prepared_qu_call}` (was `{qu_call}` before preparation)."
             )
         return exec_result
     
     def clear_cache(self):
         self.cache.clear()
 
-    class QUPlanExecutionError(Exception):
+    class OperatorTreeExecutionError(Exception):
         pass
 
 
