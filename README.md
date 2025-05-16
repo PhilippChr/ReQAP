@@ -20,17 +20,17 @@ ReQAP
 
 
 # Description
-This repository contains the code and data for our ReQAP paper on "Recursive Question Understanding for Complex Question Answering over Heterogeneous Personal Data".
+This repository contains the code for our ACL 2025 (Findings) paper on "Recursive Question Understanding for Complex Question Answering over Heterogeneous Personal Data".
 
 *Question answering over mixed sources, like text and tables, has been advanced by verbalizing all contents and encoding it with a language model. A prominent case of such heterogeneous data is personal information: user devices log vast amounts of data every day, such as calendar entries, workout statistics, shopping records, streaming history, and more. Information needs range from simple look-ups to queries of analytical nature. The challenge is to provide humans with convenient access with small footprint, so that all personal data stays on the user devices. We present ReQAP, a novel method that creates an executable operator tree for a given question, via recursive decomposition. Operators are designed to enable seamless integration of structured and unstructured sources, and the execution of the operator tree yields a traceable answer. We further release the PerQA benchmark, with persona-based data and questions, covering a diverse spectrum of realistic user needs.*
 
 
 If you use this code, please cite:
 ```bibtex
-@article{christmann2025recursive,
+@inproceedings{christmann2025recursive,
   title={Recursive Question Understanding for Complex Question Answering over Heterogeneous Personal Data},
   author={Christmann, Philipp and Weikum, Gerhard},
-  journal={arXiv},
+  booktitle={ACL 2025 Findings},
   year={2025}
 }
 ```
