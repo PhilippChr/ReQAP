@@ -183,8 +183,8 @@ class OperatorTree:
             outputs.append(self.qu_input)
         
         # add childs
-        child_parents = parents.copy()
         for child in self.childs:
+            child_parents = parents.copy()
             new_inputs, new_outputs = child.derive_training_data(parents=child_parents)
             inputs += new_inputs
             outputs += new_outputs
